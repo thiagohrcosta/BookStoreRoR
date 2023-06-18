@@ -7,6 +7,7 @@ class CreateBooks < ActiveRecord::Migration[7.0]
       t.string :cover_image, null: false, default: ''
       t.string :year, null: false, default: ''
       t.float :price, null: false, default: 0.0
+      t.references :genre, null: false, foreign_key: true
       t.timestamps
     end
   end

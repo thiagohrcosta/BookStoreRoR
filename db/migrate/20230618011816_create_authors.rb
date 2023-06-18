@@ -4,7 +4,6 @@ class CreateAuthors < ActiveRecord::Migration[7.0]
       t.string :name
       t.string :about
       t.string :photo
-
       t.timestamps
     end
   end
