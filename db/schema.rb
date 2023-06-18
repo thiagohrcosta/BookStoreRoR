@@ -27,10 +27,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_18_011823) do
     t.string "name"
     t.string "about"
     t.string "photo"
-    t.bigint "genre_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["genre_id"], name: "index_authors_on_genre_id"
   end
 
   create_table "books", force: :cascade do |t|
@@ -40,9 +38,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_18_011823) do
     t.string "cover_image", default: "", null: false
     t.string "year", default: "", null: false
     t.float "price", default: 0.0, null: false
+    t.bigint "genre_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["author_id"], name: "index_books_on_author_id"
+    t.index ["genre_id"], name: "index_books_on_genre_id"
   end
 
   create_table "genres", force: :cascade do |t|
@@ -66,6 +66,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_18_011823) do
 
   add_foreign_key "author_genres", "authors"
   add_foreign_key "author_genres", "genres"
-  add_foreign_key "authors", "genres"
   add_foreign_key "books", "authors"
+  add_foreign_key "books", "genres"
 end
