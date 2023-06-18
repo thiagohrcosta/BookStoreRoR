@@ -1,0 +1,7 @@
+<div>
+  <h1>Dashboard</h1>
+  <%= form_with url: upload_admin_dashboard_index_path, method: :post, local: true do |f| %>
+    <%= f.text_field :url %>
+    <%= f.submit "Scraper" %>
+  <% end %>
+</div>
