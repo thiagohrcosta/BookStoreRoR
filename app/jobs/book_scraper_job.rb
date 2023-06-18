@@ -5,7 +5,7 @@ require 'net/http'
 class BookScraperJob < ApplicationJob
   queue_as :default
 
-  attr_reader :book_title, :book_author, :book_author_link, :book_url, :book_cover, :book_description, :book_pages, :book_format, :publication_year
+  attr_reader :author, :book_title, :book_author, :book_author_link, :book_url, :book_cover, :book_description, :book_pages, :book_format, :publication_year
 
   def perform(url)
     uri = URI.parse(url)
@@ -80,9 +80,9 @@ class BookScraperJob < ApplicationJob
   end
 
   def author_generator
-    author = Author.find_by(name: @author_name)
+    @author = Author.find_by(name: @author_name)
           
-    if author.nil?
+    if @author.nil?
       @author = Author.new(
         name: @author_name,
         about: @author_about,
@@ -95,16 +95,18 @@ class BookScraperJob < ApplicationJob
       # end
       @author.save!
     else
-      ""
+      @author
     end
   end
 
   def genre_generator(author_doc)
     genre_element = author_doc.at_css('.dataTitle:contains("Genre")')
-    @genres_array = genre_element.next_element.css('a').map(&:text)
+    if genre_element
+      @genres_array = genre_element.next_element.css('a').map(&:text) 
 
-    @genres_array.each do |genre|
-      genre = Genre.find_or_create_by(name: genre)
+      @genres_array.each do |genre|
+        genre = Genre.find_or_create_by(name: genre)
+      end 
     end
   end
   
@@ -121,13 +123,13 @@ class BookScraperJob < ApplicationJob
         price: 0.0,
         genre_id: 1
       )
-      @genres_array.each do |genre|
-        genre = Genre.find_or_create_by(name: genre)
-        genre.update(book_id: book.id, genre_id: genre.id)
-        book.genres << genre
-      end
+      # @genres_array.each do |genre|
+      #   genre = Genre.find_or_create_by(name: genre)
+      #   genre.update(book_id: book.id, genre_id: genre.id)
+      #   book.genres << genre
+      # end
     else
-      puts "Book already exists: #{book_title}"
+      puts "Book already exists: #{@book_title}"
     end
   end
 end
