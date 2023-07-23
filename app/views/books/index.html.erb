@@ -1,0 +1,9 @@
+<div class="container d-flex">
+  <div class="row">
+    <% @books.each do |book| %>
+      <div class="col-md-3">
+        <img class="w-25" src="<%= book.cover_image %>" >
+      </div>
+    <% end %>
+  </div>
+</div>
